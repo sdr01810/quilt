@@ -533,8 +533,12 @@ find_patch()
 
 		local patch=${1#$SUBDIR_DOWN$QUILT_PATCHES/}
 		local bre=$(quote_bre "$patch")
-		set -- $(sed -e "/^$bre\(\|\.patch\|\.diff\?\)\(\|\.gz\|\.bz2\|\.xz\|\.lzma\|\.lz\)\([ "$'\t'"]\|$\)/!d" \
-			       -e 's/[ '$'\t''].*//' "$SERIES")
+		set -- $(sed \
+			-e 's/^[ '$'\t'']*//' \
+			-e "/^$bre\(\|\.patch\|\.diff\?\)\(\|\.gz\|\.bz2\|\.xz\|\.lzma\|\.lz\)\([ "$'\t'"]\|$\)/!d" \
+			-e 's/[ '$'\t''].*//' \
+			"$SERIES" \
+		)
 		if [ $# -eq 1 ]
 		then
 			echo $1
